@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/utilisateurs/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/utilisateurs/**").hasAuthority("ADMIN")
 
-                        .requestMatchers("/api/recipe/**").permitAll()
+                        .requestMatchers("/api/recipes/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/utilisateurs/**").authenticated()
                         .requestMatchers("/api/profils-de-sante/**").authenticated()

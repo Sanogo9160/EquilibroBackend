@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 
-//@RequestMapping("/api/recipe")
+@RequestMapping("/api")
 public class RecipeController {
     private final EdamamService edamamService;
 
@@ -16,8 +16,19 @@ public class RecipeController {
         this.edamamService = edamamService;
     }
 
-    @GetMapping("/api/recipes")
+    /*
+    @GetMapping("/recipes")
     public String getRecipes(@RequestParam String query) {
+        return edamamService.getRecipes(query);
+    }
+    */
+
+    @GetMapping("/api/recipes")
+    public String getRecipes(@RequestParam(required = false) String query) {
+        if (query == null || query.isEmpty()) {
+            // Retourner toutes les recettes
+            return edamamService.getAllRecipes();
+        }
         return edamamService.getRecipes(query);
     }
 

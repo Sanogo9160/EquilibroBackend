@@ -34,6 +34,14 @@ public class EdamamService {
         return restTemplate.getForObject(url, String.class);
     }
 
+    // Méthode pour récupérer toutes les recettes
+    public String getAllRecipes() {
+
+        // Par exemple, si vous avez une liste de recettes en mémoire :
+        return "[{\"label\": \"Recette 1\", \"image\": \"url1\", \"cookingTime\": 30}, " +
+                "{\"label\": \"Recette 2\", \"image\": \"url2\", \"cookingTime\": 45}]";
+    }
+
 
 
 
