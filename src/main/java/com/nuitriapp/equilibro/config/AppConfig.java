@@ -10,12 +10,8 @@ import java.time.Duration;
 public class AppConfig {
 
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder
-                .setConnectTimeout(Duration.ofSeconds(10))
-                .setReadTimeout(Duration.ofSeconds(10))
-                .build();
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
-
 
 }

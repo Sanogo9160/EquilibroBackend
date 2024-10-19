@@ -89,6 +89,7 @@ public class RecetteController {
 
      */
 
+    /*
     @Autowired
     private RecetteService recetteService;
 
@@ -97,4 +98,6 @@ public class RecetteController {
         Recette recette = recetteService.getRecette(label);
         return ResponseEntity.ok(recette);
     }
+
+     */
 }

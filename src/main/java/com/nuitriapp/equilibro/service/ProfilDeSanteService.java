@@ -84,10 +84,10 @@ public class ProfilDeSanteService {
         String diet = "";
         int calories = 0;
 
-        RecetteResponse recetteResponse = edamamService.fetchRecettes(query, healthLabel, diet, calories);
+        //RecetteResponse recetteResponse = edamamService.fetchRecettes(query, healthLabel, diet, calories);
 
         // Enregistrer les recettes récupérées
-        recetteResponse.getRecettes().forEach(recetteService::saveRecette);
+       // recetteResponse.getRecettes().forEach(recetteService::saveRecette);
     }
 
 

@@ -52,9 +52,8 @@ public class UtilisateurService {
         utilisateurRepository.deleteById(id);
     }
 
+    // Méthode pour rechercher un utilisateur par email
     public Optional<Utilisateur> rechercherParEmail(String email) {
         return utilisateurRepository.findByEmail(email);
     }
-
-
 }

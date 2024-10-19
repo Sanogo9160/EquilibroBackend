@@ -28,7 +28,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private static final List<String> EXCLUDED_PATHS = List.of(
             "/api/auth/**",
-            "/api/edamam/**"
+            "/api/recipe/**"
     );
 
     private AntPathMatcher pathMatcher = new AntPathMatcher();

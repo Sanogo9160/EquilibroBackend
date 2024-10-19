@@ -3,6 +3,7 @@ package com.nuitriapp.equilibro.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -15,8 +16,15 @@ public class Forum {
     private String nom;
     private String description;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Sujet> sujets;
+    @ManyToOne
+    @JoinColumn(name = "utilisateur_id")
+    private Utilisateur auteur;
+
+    private LocalDateTime dateCreation;
+
+    @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)
+    private List<Commentaire> commentaires;
+
 
     /*
     @ManyToOne

@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200","http://localhost:52139"));
+                    corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200","http://localhost:49889"));
                     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(List.of("*"));
                     corsConfiguration.setAllowCredentials(true);
@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/utilisateurs/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/utilisateurs/**").hasAuthority("ADMIN")
 
-                        .requestMatchers("/api/edamam/**").permitAll()
+                        .requestMatchers("/api/recipe/**").permitAll()
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/utilisateurs/**").authenticated()
                         .requestMatchers("/api/profils-de-sante/**").authenticated()

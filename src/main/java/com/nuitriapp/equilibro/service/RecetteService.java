@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Service
 public class RecetteService {
+    /*
     @Autowired
     private final RecetteRepository recetteRepository;
     private final EdamamService edamamService;
@@ -32,5 +33,5 @@ public class RecetteService {
         recetteRepository.save(recette);
     }
 
-
+     */
 }

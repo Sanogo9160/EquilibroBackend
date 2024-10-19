@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/repas")
 public class RepasController {
-
+/*
     @Autowired
     private EdamamService edamamService;
 
@@ -25,6 +25,8 @@ public class RepasController {
 
         return edamamService.fetchRecettes(query, healthLabel, diet, calories);
     }
+
+ */
 
 
 }

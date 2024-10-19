@@ -5,6 +5,7 @@ import com.nuitriapp.equilibro.repository.UtilisateurRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,10 +26,7 @@ public class UtilisateurDetailsService implements UserDetailsService {
         Utilisateur utilisateur = utilisateurRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Utilisateur introuvable avec l'email: " + email));
 
-        // Récupére le rôle de l'utilisateur
-       // String role = utilisateur.getRole().getNom();
-
-        // Crée une liste d'autorités (rôles)
+        // Récupère le rôle de l'utilisateur
         List<GrantedAuthority> authorities = new ArrayList<>();
         if (utilisateur.getRole() != null) {
             authorities.add(new SimpleGrantedAuthority(utilisateur.getRole().getNom()));
@@ -36,4 +34,14 @@ public class UtilisateurDetailsService implements UserDetailsService {
 
         return new User(utilisateur.getEmail(), utilisateur.getMotDePasse(), authorities);
     }
+
+    public Utilisateur getCurrentUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            String email = ((UserDetails) principal).getUsername();
+            return utilisateurRepository.findByEmail(email).orElse(null);  // Récupère l'utilisateur par email
+        }
+        return null; // Gérer le cas où l'utilisateur n'est pas authentifié
+    }
+
 }

@@ -1,48 +1,76 @@
 package com.nuitriapp.equilibro.controller;
 
+import com.nuitriapp.equilibro.model.Commentaire;
 import com.nuitriapp.equilibro.model.Forum;
+import com.nuitriapp.equilibro.model.Utilisateur;
+import com.nuitriapp.equilibro.repository.ForumRepository;
+import com.nuitriapp.equilibro.service.CommentaireService;
 import com.nuitriapp.equilibro.service.ForumService;
+import com.nuitriapp.equilibro.service.UtilisateurDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/forums")
+
 public class ForumController {
 
     @Autowired
     private ForumService forumService;
 
-    // Récupérer tous les forums
-    @GetMapping
-    public ResponseEntity<List<Forum>> obtenirTousLesForums() {
-        List<Forum> forums = forumService.obtenirTousLesForums();
-        return new ResponseEntity<>(forums, HttpStatus.OK);
-    }
+    @Autowired
+    private UtilisateurDetailsService utilisateurDetailsService;
 
-    // Récupérer un forum par ID
-    @GetMapping("/{id}")
-    public ResponseEntity<Forum> obtenirForumParId(@PathVariable Long id) {
-        Optional<Forum> forum = forumService.obtenirForumParId(id);
-        return forum.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    @Autowired
+    private CommentaireService commentaireService;
 
-    // Créer un nouveau forum
     @PostMapping("/creer")
     public ResponseEntity<Forum> creerForum(@RequestBody Forum forum) {
-        Forum nouveauForum = forumService.creerForum(forum);
-        return new ResponseEntity<>(nouveauForum, HttpStatus.CREATED);
+        Utilisateur utilisateur = utilisateurDetailsService.getCurrentUser();
+        forum.setAuteur(utilisateur);
+        Forum forumSauvegarde = forumService.creerForum(forum);
+        return ResponseEntity.ok(forumSauvegarde);
     }
 
-    // Supprimer un forum par ID
-    @DeleteMapping("/supprimer/{id}")
+    @GetMapping("/obtenir")
+    public List<Forum> listerForums() {
+        return forumService.listerForums();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Forum> obtenirForum(@PathVariable Long id) {
+        Forum forum = forumService.obtenirForum(id);
+        return ResponseEntity.ok(forum);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Forum> mettreAJourForum(@PathVariable Long id, @RequestBody Forum forum) {
+        Forum forumMisAJour = forumService.mettreAJourForum(id, forum);
+        return ResponseEntity.ok(forumMisAJour);
+    }
+
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> supprimerForum(@PathVariable Long id) {
         forumService.supprimerForum(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{forumId}/commentaires")
+    public ResponseEntity<Commentaire> ajouterCommentaire(@PathVariable Long forumId, @RequestBody Commentaire commentaire) {
+        Forum forum = forumService.obtenirForum(forumId);
+        Utilisateur utilisateur = utilisateurDetailsService.getCurrentUser();
+        commentaire.setForum(forum);
+        commentaire.setAuteur(utilisateur);
+        Commentaire commentaireSauvegarde = commentaireService.creerCommentaire(commentaire);
+        return ResponseEntity.ok(commentaireSauvegarde);
+    }
+
+    @GetMapping("/{forumId}/commentaires")
+    public List<Commentaire> listerCommentaires(@PathVariable Long forumId) {
+        Forum forum = forumService.obtenirForum(forumId);
+        return forum.getCommentaires();
     }
 
 }

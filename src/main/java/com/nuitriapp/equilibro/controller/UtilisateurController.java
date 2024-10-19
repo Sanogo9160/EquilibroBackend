@@ -7,6 +7,8 @@ import com.nuitriapp.equilibro.service.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -71,6 +73,22 @@ public class UtilisateurController {
         Optional<Utilisateur> utilisateurOpt = utilisateurService.rechercherParEmail(email);
         return utilisateurOpt.map(utilisateur -> new ResponseEntity<>(utilisateur, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/current")
+    public ResponseEntity<Utilisateur> obtenirUtilisateurActuel() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            String email = authentication.getName(); // ou utilisez un ID
+            Optional<Utilisateur> utilisateurOpt = utilisateurService.rechercherParEmail(email);
+
+            if (utilisateurOpt.isPresent()) {
+                return new ResponseEntity<>(utilisateurOpt.get(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
 }
