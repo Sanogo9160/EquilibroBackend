@@ -36,8 +36,7 @@ public class ProfilDeSanteService {
 
     @Autowired
     private EdamamService edamamService;
-    @Autowired
-    private RecetteService recetteService;
+
     @Autowired
     private UtilisateurService utilisateurService;
 
