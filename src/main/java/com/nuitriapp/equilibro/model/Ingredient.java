@@ -1,9 +1,6 @@
 package com.nuitriapp.equilibro.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -16,5 +13,9 @@ public class Ingredient {
 
     private String name; // Nom de l'ingrédient
     private String quantity; // Quantité de l'ingrédient
+
+    @ManyToOne
+    @JoinColumn(name = "recipe_id")
+    private Recipe recipe; // Association avec la recette
 
 }

@@ -1,10 +1,7 @@
 package com.nuitriapp.equilibro.model;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
@@ -19,7 +16,11 @@ public class Recipe {
     private String label; // Nom de la recette
     private String image; // URL de l'image
     private String url;   // URL de la recette
-    private List<String> ingredients; // Liste des ingrédients
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ingredient> ingredients; // Liste des ingrédients
+
     private int cookingTime; // Temps de cuisson en minutes
+
 
 }

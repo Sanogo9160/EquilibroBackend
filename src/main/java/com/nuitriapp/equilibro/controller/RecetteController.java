@@ -1,16 +1,6 @@
 package com.nuitriapp.equilibro.controller;
 
-import com.nuitriapp.equilibro.model.ProfilDeSante;
-import com.nuitriapp.equilibro.model.Recette;
-import com.nuitriapp.equilibro.model.RecetteResponse;
-import com.nuitriapp.equilibro.service.EdamamService;
-import com.nuitriapp.equilibro.service.ProfilDeSanteService;
-import com.nuitriapp.equilibro.service.RecetteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/api/recettes")
