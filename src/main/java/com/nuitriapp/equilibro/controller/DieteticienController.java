@@ -1,43 +1,26 @@
 package com.nuitriapp.equilibro.controller;
 
 import com.nuitriapp.equilibro.model.Dieteticien;
+import com.nuitriapp.equilibro.model.Utilisateur;
+import com.nuitriapp.equilibro.repository.UtilisateurRepository;
 import com.nuitriapp.equilibro.service.DieteticienService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-//@RequestMapping("api/dieteticiens")
+@RequestMapping("api/dieteticiens")
 public class DieteticienController {
-/*
+
     @Autowired
-    private DieteticienService dieteticienService;
-
-    @PostMapping("/creer")
-    public Dieteticien creerDieteticien(@RequestBody Dieteticien dieteticien) {
-        return dieteticienService.creerDieteticien(dieteticien);
-    }
-
-    @GetMapping("/{id}")
-    public Dieteticien obtenirDieteticien(@PathVariable Long id) {
-        return dieteticienService.obtenirDieteticienParId(id);
-    }
-
-    @PutMapping("modifier/{id}")
-    public Dieteticien modifierDieteticien(@PathVariable Long id, @RequestBody Dieteticien dieteticien) {
-        return dieteticienService.modifierDieteticien(id, dieteticien);
-    }
-
-    @DeleteMapping("supprimer/{id}")
-    public void supprimerDieteticien(@PathVariable Long id) {
-        dieteticienService.supprimerDieteticien(id);
-    }
+    private UtilisateurRepository utilisateurRepository;
 
     @GetMapping("/liste")
-    public List<Dieteticien> obtenirTousLesDieteticiens() {
-        return dieteticienService.obtenirTousLesDieteticiens();
+    public List<Utilisateur> getAllDieteticiens() {
+        // Retourne uniquement les utilisateurs avec le rôle de DIETETICIEN
+        return utilisateurRepository.findByRoleNom("DIETETICIEN");
     }
 
- */
 }

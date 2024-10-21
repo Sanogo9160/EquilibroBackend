@@ -14,14 +14,21 @@ public class Consultation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate dateConsultation;
-    private String commentaires;
+    @ManyToOne
+    @JoinColumn(name = "dieteticien_id", nullable = false)
+    private Dieteticien dieteticien;
 
     @ManyToOne
-    private Dieteticien dieteticien; // Fait reference au user Dieteticien
+    @JoinColumn(name = "utilisateur_id", nullable = false)
+    private Utilisateur utilisateur;
 
-    @ManyToOne
-    private UtilisateurSimple utilisateur;
+    private LocalDateTime dateConsultation;
+
+    private boolean estConfirmee;
+
+    public Consultation() {
+        this.estConfirmee = false;  // Par défaut, la consultation n'est pas confirmée
+    }
 
 
 }
