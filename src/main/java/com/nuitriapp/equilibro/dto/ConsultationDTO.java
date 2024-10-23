@@ -9,4 +9,5 @@ public class ConsultationDTO {
     private Long utilisateurId;
     private Long dieteticienId;
     private LocalDateTime dateConsultation;
+    private String motif;
 }

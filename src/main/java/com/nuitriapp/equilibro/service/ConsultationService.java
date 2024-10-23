@@ -23,29 +23,50 @@ public class ConsultationService {
 
     @Autowired
     private UtilisateurRepository utilisateurRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     public void bookConsultation(ConsultationDTO consultationDTO) {
-        Optional<Dieteticien> dieteticien = dieteticienRepository.findById(consultationDTO.getDieteticienId());
-        Optional<Utilisateur> utilisateur = utilisateurRepository.findById(consultationDTO.getUtilisateurId());
+        // Récupérer le diététicien et l'utilisateur
+        Dieteticien dieteticien = getDieteticienById(consultationDTO.getDieteticienId());
+        Utilisateur utilisateur = getUtilisateurById(consultationDTO.getUtilisateurId());
 
-        if (dieteticien.isPresent() && utilisateur.isPresent()) {
-            Consultation consultation = new Consultation();
-            consultation.setDieteticien(dieteticien.get());
-            consultation.setUtilisateur(utilisateur.get());
-            consultation.setDateConsultation(consultationDTO.getDateConsultation());
+        // Créer et sauvegarder la consultation
+        Consultation consultation = new Consultation();
+        consultation.setDieteticien(dieteticien);
+        consultation.setUtilisateur(utilisateur);
+        consultation.setDateConsultation(consultationDTO.getDateConsultation());
+        consultation.setMotif(consultationDTO.getMotif());
+        consultation.setEstConfirmee(false);
 
-            consultationRepository.save(consultation);
-        } else {
-            throw new RuntimeException("Dieteticien ou Utilisateur non trouvé");
-        }
+        consultationRepository.save(consultation);
+
+        // Envoyer notification au diététicien
+        notificationService.envoyerNotification(dieteticien, "Nouvelle réservation de consultation reçue.");
     }
 
-    public void confirmerConsultation(Long consultationId) {
-        Consultation consultation = consultationRepository.findById(consultationId)
-                .orElseThrow(() -> new RuntimeException("Consultation non trouvée"));
-
+    public void confirmerConsultation(Long id) {
+        Consultation consultation = getConsultationById(id);
         consultation.setEstConfirmee(true);
         consultationRepository.save(consultation);
+
+        // Envoyer notification à l'utilisateur
+        notificationService.envoyerNotification(consultation.getUtilisateur(), "Votre réservation de consultation a été confirmée.");
+    }
+
+    private Dieteticien getDieteticienById(Long id) {
+        return dieteticienRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Dieteticien non trouvé avec l'ID: " + id));
+    }
+
+    private Utilisateur getUtilisateurById(Long id) {
+        return utilisateurRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé avec l'ID: " + id));
+    }
+
+    private Consultation getConsultationById(Long id) {
+        return consultationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Consultation non trouvée avec l'ID: " + id));
     }
 
 }

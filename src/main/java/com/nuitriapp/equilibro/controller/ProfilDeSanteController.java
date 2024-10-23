@@ -55,9 +55,15 @@ public class ProfilDeSanteController {
 
     @PutMapping("/modifier/{id}")
     public ResponseEntity<ProfilDeSante> mettreAJourProfil(@PathVariable Long id, @RequestBody ProfilDeSante profilDeSante) {
-    ProfilDeSante profilMisAJour = profilDeSanteService.mettreAJourProfil(id, profilDeSante);
-    return profilMisAJour != null ? new ResponseEntity<>(profilMisAJour, HttpStatus.OK)
-            : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        try {
+            ProfilDeSante profilMisAJour = profilDeSanteService.mettreAJourProfil(id, profilDeSante);
+            return profilMisAJour != null ? new ResponseEntity<>(profilMisAJour, HttpStatus.OK)
+                    : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            // Log l'erreur pour le diagnostic
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/supprimer/{id}")

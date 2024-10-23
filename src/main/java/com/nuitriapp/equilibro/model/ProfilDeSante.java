@@ -46,7 +46,7 @@ public class ProfilDeSante {
     )
     private Set<PreferenceAlimentaire> preferencesAlimentaires;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "utilisateur_id")
     @JsonManagedReference
     private Utilisateur utilisateur;

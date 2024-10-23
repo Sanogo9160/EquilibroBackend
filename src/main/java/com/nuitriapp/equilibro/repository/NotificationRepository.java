@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    List<Notification> findByUtilisateurId(Long utilisateurId);
+    List<Notification> findByUtilisateur_Id(Long utilisateurId);
 
     Long countByUtilisateurId(Long utilisateurId);
 }

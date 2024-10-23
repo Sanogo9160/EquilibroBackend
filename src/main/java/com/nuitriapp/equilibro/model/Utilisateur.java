@@ -24,6 +24,9 @@ public class Utilisateur {
     private Integer age;
     private String sexe;
 
+    private String imageUrl; // Champ pour stocker l'URL de l'image
+
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

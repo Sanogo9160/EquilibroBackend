@@ -2,19 +2,22 @@ package com.nuitriapp.equilibro.service;
 
 import com.nuitriapp.equilibro.model.*;
 import com.nuitriapp.equilibro.repository.*;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
 public class ProfilDeSanteService {
-
 
     @Autowired
     private ProfilDeSanteRepository profilDeSanteRepository;
@@ -60,35 +63,46 @@ public class ProfilDeSanteService {
                 .orElse(null);
     }
 
+    @Transactional
     public ProfilDeSante mettreAJourProfil(Long id, ProfilDeSante profilDeSante) {
-        return profilDeSanteRepository.findById(id)
-                .map(existant -> {
-                    existant.setUtilisateur(profilDeSante.getUtilisateur());
-                    enregistrerAssociations(profilDeSante);
-                    return profilDeSanteRepository.save(existant);
-                })
-                .orElse(null);
+        ProfilDeSante existingProfil = profilDeSanteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Profil non trouvé"));
+
+        // Mis à jour les maladies, objectifs, allergies et préférences alimentaires
+        existingProfil.setMaladies(profilDeSante.getMaladies());
+        existingProfil.setObjectifs(profilDeSante.getObjectifs());
+        existingProfil.setAllergies(profilDeSante.getAllergies());
+        existingProfil.setPreferencesAlimentaires(profilDeSante.getPreferencesAlimentaires());
+
+        // Mis à jour l'utilisateur
+        Utilisateur existingUtilisateur = utilisateurRepository.findById(profilDeSante.getUtilisateur().getId())
+                .orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé"));
+
+        // Mis à jour des champs de l'utilisateur
+        existingUtilisateur.setNom(profilDeSante.getUtilisateur().getNom());
+        // Mettez à jour d'autres champs si nécessaire
+
+        // Sauvegarde de l'utilisateur
+        utilisateurRepository.save(existingUtilisateur);
+
+        // Sauvegarde du profil de santé mis à jour
+        return profilDeSanteRepository.save(existingProfil);
     }
 
     public void supprimerProfil(Long id) {
-        profilDeSanteRepository.findById(id).ifPresent(profil -> {
-            profilDeSanteRepository.delete(profil);
-        });
+        profilDeSanteRepository.findById(id).ifPresent(profilDeSanteRepository::delete);
     }
 
     private void genererRecettesPourProfil(ProfilDeSante profil) {
         String query = genererRequeteProfil(profil);
-
-        String healthLabel = "";
-        String diet = "";
-        int calories = 0;
-
-        //RecetteResponse recetteResponse = edamamService.fetchRecettes(query, healthLabel, diet, calories);
-
+        // Logique pour générer des recettes (commentée pour l'instant)
+        // String healthLabel = "";
+        // String diet = "";
+        // int calories = 0;
+        // RecetteResponse recetteResponse = edamamService.fetchRecettes(query, healthLabel, diet, calories);
         // Enregistrer les recettes récupérées
-       // recetteResponse.getRecettes().forEach(recetteService::saveRecette);
+        // recetteResponse.getRecettes().forEach(recetteService::saveRecette);
     }
-
 
     private void enregistrerAssociations(ProfilDeSante profilDeSante) {
         profilDeSante.setMaladies(sauvegarderEntities(profilDeSante.getMaladies(), maladieRepository));
@@ -103,7 +117,8 @@ public class ProfilDeSanteService {
                         profil.getAllergies().stream().map(Allergie::getNom),
                         profil.getObjectifs().stream().map(ObjectifSante::getNom),
                         profil.getPreferencesAlimentaires().stream().map(PreferenceAlimentaire::getNom)
-                ).flatMap(s -> s)
+                )
+                .flatMap(s -> s)
                 .collect(Collectors.joining(", "));
         return URLEncoder.encode(query, StandardCharsets.UTF_8);
     }
@@ -115,24 +130,14 @@ public class ProfilDeSanteService {
     }
 
     public ProfilDeSante obtenirProfilParEmail(String email) {
-        Optional<Utilisateur> utilisateurOpt = utilisateurRepository.findByEmail(email);
-
-        if (utilisateurOpt.isPresent()) {
-            Utilisateur utilisateur = utilisateurOpt.get();
-            return utilisateur.getProfilDeSante();
-        } else {
-            return null;
-        }
+        return utilisateurRepository.findByEmail(email)
+                .map(Utilisateur::getProfilDeSante)
+                .orElse(null);
     }
 
     public Long getUtilisateurIdByEmail(String email) {
-        Optional<Utilisateur> optionalUtilisateur = utilisateurService.rechercherParEmail(email);
-        if (optionalUtilisateur.isPresent()) {
-            return optionalUtilisateur.get().getId();
-        } else {
-            return null;
-        }
+        return utilisateurService.rechercherParEmail(email)
+                .map(Utilisateur::getId)
+                .orElse(null);
     }
-
-
 }

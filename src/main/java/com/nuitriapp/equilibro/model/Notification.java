@@ -13,11 +13,11 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type;
     private String message;
-    private LocalDateTime heure;
+    private LocalDateTime date;
 
     @ManyToOne
+    @JoinColumn(name = "utilisateur_id")
     private Utilisateur utilisateur;
 
 }

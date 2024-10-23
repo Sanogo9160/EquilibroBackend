@@ -20,6 +20,7 @@ public class DisponibiliteService {
     @Autowired
     private DieteticienRepository dieteticienRepository;
 
+    /*
     public void ajouterDisponibilite(DisponibiliteDTO disponibiliteDTO) {
         Dieteticien dieteticien = dieteticienRepository.findById(disponibiliteDTO.getDieteticienId())
                 .orElseThrow(() -> new RuntimeException("Dieteticien non trouvé"));
@@ -36,6 +37,18 @@ public class DisponibiliteService {
         List<Disponibilite> disponibilites = disponibiliteRepository.findByDieteticienId(dieteticienId);
         return disponibilites.stream().map(DisponibiliteDTO::fromEntity).collect(Collectors.toList());
     }
+     */
 
+    public void ajouterDisponibilite(DisponibiliteDTO disponibiliteDTO) {
+        Disponibilite disponibilite = disponibiliteDTO.toEntity();
+        disponibiliteRepository.save(disponibilite);
+    }
+
+    public List<DisponibiliteDTO> getDisponibilitesByDieteticien(Long dieteticienId) {
+        List<Disponibilite> disponibilites = disponibiliteRepository.findByDieteticienId(dieteticienId);
+        return disponibilites.stream()
+                .map(DisponibiliteDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 
 }

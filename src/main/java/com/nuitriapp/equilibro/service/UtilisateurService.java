@@ -43,6 +43,7 @@ public class UtilisateurService {
             existant.setAge(utilisateur.getAge());
             existant.setSexe(utilisateur.getSexe());
             existant.setRole(utilisateur.getRole());
+            existant.setImageUrl(utilisateur.getImageUrl());
             return utilisateurRepository.save(existant);
         }
         return null;
