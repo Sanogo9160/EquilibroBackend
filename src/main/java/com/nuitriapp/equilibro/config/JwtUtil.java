@@ -1,4 +1,5 @@
 package com.nuitriapp.equilibro.config;
+
 import com.nuitriapp.equilibro.service.RoleService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -13,44 +14,49 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private final RoleService role;
-    // Clé secrète pour signer le JWT
+    private final RoleService roleService;
     private String secret = "maCleSecretePourJWT";
 
-    public JwtUtil(RoleService role) {
-        this.role = role;
+    public JwtUtil(RoleService roleService) {
+        this.roleService = roleService;
     }
 
-    // Générer un token JWT à partir de l'email
-    public String generateToken(String email) {
+    // Générer un token JWT à partir de l'email et de l'ID utilisateur
+    public String generateToken(String email, Long userId) {
         return Jwts.builder()
-                .setSubject(email) // L'email est le sujet
-                .claim("roles", role)
-                .setIssuedAt(new Date()) // Date de génération du token
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Expiration dans 10 heures
-                .signWith(SignatureAlgorithm.HS256, secret) // Signature avec la clé secrète et l'algorithme HS256
+                .setSubject(email)
+                .claim("id", userId)           // Ajout de l'ID utilisateur dans les claims
+                .claim("roles", roleService)    // Ajoutez les rôles si nécessaire
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // Expire dans 10 heures
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
 
-    // Extraire l'email à partir du token JWT
+    // Extraire l'email du token JWT
     public String extractEmail(String token) {
-        return extractClaim(token, Claims::getSubject); // Le sujet contient l'email
+        return extractClaim(token, Claims::getSubject);
     }
 
-    // Extraire les rôles à partir du token JWT
+    // Extraire l'ID utilisateur à partir du token JWT
+    public Long extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("id", Long.class);
+    }
+
+    // Extraire les rôles du token JWT
     public List<String> extractRoles(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get("roles", List.class);  // Récupérer les rôles depuis les claims du JWT
+        return claims.get("roles", List.class);
     }
 
-
-    // Extraire une réclamation spécifique (ici l'email)
+    // Extraire une réclamation spécifique
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    // Extraire toutes les réclamations (claims) à partir du token JWT
+    // Extraire toutes les réclamations (claims)
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)
@@ -58,21 +64,20 @@ public class JwtUtil {
                 .getBody();
     }
 
-    // Vérifier si le token JWT a expiré
+    // Vérifier si le token a expiré
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    // Extraire la date d'expiration du token JWT
+    // Extraire la date d'expiration du token
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // Valider le token JWT en vérifiant l'email et l'expiration
+    // Valider le token en comparant l'email et l'expiration
     public boolean validateToken(String token, UserDetails userDetails) {
         final String email = extractEmail(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
-
 
 }

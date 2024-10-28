@@ -1,5 +1,6 @@
 package com.nuitriapp.equilibro.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,6 +21,7 @@ public class Forum {
     @JoinColumn(name = "utilisateur_id")
     private Utilisateur auteur;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dateCreation;
 
     @OneToMany(mappedBy = "forum", cascade = CascadeType.ALL)

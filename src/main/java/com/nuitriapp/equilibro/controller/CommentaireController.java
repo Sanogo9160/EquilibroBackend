@@ -19,13 +19,13 @@ public class CommentaireController {
         return ResponseEntity.ok(commentaire);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/modifier/{id}")
     public ResponseEntity<Commentaire> mettreAJourCommentaire(@PathVariable Long id, @RequestBody Commentaire commentaire) {
         Commentaire commentaireMisAJour = commentaireService.mettreAJourCommentaire(id, commentaire);
         return ResponseEntity.ok(commentaireMisAJour);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/supprimer/{id}")
     public ResponseEntity<Void> supprimerCommentaire(@PathVariable Long id) {
         commentaireService.supprimerCommentaire(id);
         return ResponseEntity.noContent().build();

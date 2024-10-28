@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:59986"})
 @RequestMapping("/api")
 public class RecipeController {
@@ -32,7 +31,7 @@ public class RecipeController {
     // Récupérer des recettes générales sans filtrage par profil de santé
     @GetMapping("/recipes")
     public Map<String, List<Recipe>> getRecipes() {
-        List<Recipe> recipes = edamamService.getRecipesFromApi();
+        List<Recipe> recipes = edamamService.getRecipesFromApi(); // Cette méthode doit être mise à jour
         return recipes.stream().collect(Collectors.groupingBy(Recipe::getCategory));
     }
 
@@ -47,7 +46,7 @@ public class RecipeController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        List<Recipe> mealPlan = edamamService.getRecipesFromApi(profilDeSante);
+        List<Recipe> mealPlan = edamamService.getRecipesFromApi(profilDeSante); // Appel avec le profil de santé
         if (mealPlan.isEmpty()) {
             mealPlan = edamamService.getRecipesFromApi();  // Plan de secours sans restrictions
         }
@@ -55,4 +54,3 @@ public class RecipeController {
         return new ResponseEntity<>(mealPlan, HttpStatus.OK);
     }
 }
-

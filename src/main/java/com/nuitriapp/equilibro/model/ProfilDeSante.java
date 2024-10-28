@@ -3,6 +3,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -20,7 +21,7 @@ public class ProfilDeSante {
             joinColumns = @JoinColumn(name = "profil_id"),
             inverseJoinColumns = @JoinColumn(name = "maladie_id")
     )
-    private Set<Maladie> maladies;
+    private Set<Maladie> maladies = new HashSet<>(); // Initialisation ici
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -28,7 +29,7 @@ public class ProfilDeSante {
             joinColumns = @JoinColumn(name = "profil_id"),
             inverseJoinColumns = @JoinColumn(name = "objectif_id")
     )
-    private Set<ObjectifSante> objectifs;
+    private Set<ObjectifSante> objectifs = new HashSet<>(); // Initialisation ici
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -36,7 +37,7 @@ public class ProfilDeSante {
             joinColumns = @JoinColumn(name = "profil_id"),
             inverseJoinColumns = @JoinColumn(name = "allergie_id")
     )
-    private Set<Allergie> allergies;
+    private Set<Allergie> allergies = new HashSet<>(); // Initialisation ici
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
@@ -44,7 +45,7 @@ public class ProfilDeSante {
             joinColumns = @JoinColumn(name = "profil_id"),
             inverseJoinColumns = @JoinColumn(name = "preference_id")
     )
-    private Set<PreferenceAlimentaire> preferencesAlimentaires;
+    private Set<PreferenceAlimentaire> preferencesAlimentaires = new HashSet<>(); // Initialisation ici
 
     @OneToOne
     @JoinColumn(name = "utilisateur_id")

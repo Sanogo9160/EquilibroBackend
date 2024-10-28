@@ -15,6 +15,7 @@ public class Commentaire {
 
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
     private String contenu;
 
     @ManyToOne
