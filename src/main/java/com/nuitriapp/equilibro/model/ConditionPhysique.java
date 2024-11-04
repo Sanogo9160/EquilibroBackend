@@ -11,13 +11,17 @@ public class ConditionPhysique {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double poids;
-    private Double glycemie;
-    private String pressionArterielle;
+    private Long profilId;
     private LocalDate date;
+    private double poids;
+    private double glycemie;
+    private double pressionArterielle;
 
+    /*
     @ManyToOne
     private Utilisateur utilisateur;
+
+     */
 
 
 }

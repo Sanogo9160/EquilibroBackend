@@ -40,7 +40,17 @@ public class DisponibiliteService {
      */
 
     public void ajouterDisponibilite(DisponibiliteDTO disponibiliteDTO) {
-        Disponibilite disponibilite = disponibiliteDTO.toEntity();
+        // Récupérez l'entité Dieteticien à partir de son ID
+        Dieteticien dieteticien = dieteticienRepository.findById(disponibiliteDTO.getDieteticienId())
+                .orElseThrow(() -> new RuntimeException("Dieteticien non trouvé"));
+
+        // Créez l'entité Disponibilite et associez le Dieteticien
+        Disponibilite disponibilite = new Disponibilite();
+        disponibilite.setDieteticien(dieteticien); // Associez le dieteticien ici
+        disponibilite.setDateDebut(disponibiliteDTO.getDateDebut());
+        disponibilite.setDateFin(disponibiliteDTO.getDateFin());
+
+        // Sauvegardez la disponibilité
         disponibiliteRepository.save(disponibilite);
     }
 

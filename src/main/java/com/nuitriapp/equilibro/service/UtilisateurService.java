@@ -57,4 +57,17 @@ public class UtilisateurService {
     public Optional<Utilisateur> rechercherParEmail(String email) {
         return utilisateurRepository.findByEmail(email);
     }
+
+    public long obtenirNombreTotalUtilisateurs() {
+        return utilisateurRepository.countTotalUtilisateurs();
+    }
+
+    public long obtenirNombreDieteticiens() {
+        return utilisateurRepository.countDieteticiens();
+    }
+
+    public long obtenirNombreConsultations() {
+        return utilisateurRepository.countConsultations();
+    }
+
 }

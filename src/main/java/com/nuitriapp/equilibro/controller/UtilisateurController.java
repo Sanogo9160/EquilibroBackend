@@ -11,9 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:60372"})
@@ -90,6 +91,17 @@ public class UtilisateurController {
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
+
+    @GetMapping("/stats")
+    public ResponseEntity<Map<String, Long>> obtenirStatistiques() {
+        Map<String, Long> stats = new HashMap<>();
+        stats.put("totalUtilisateurs", utilisateurService.obtenirNombreTotalUtilisateurs());
+        stats.put("nombreDieteticiens", utilisateurService.obtenirNombreDieteticiens());
+        stats.put("nombreConsultations", utilisateurService.obtenirNombreConsultations());
+
+        return new ResponseEntity<>(stats, HttpStatus.OK);
+    }
+
 
 }
 

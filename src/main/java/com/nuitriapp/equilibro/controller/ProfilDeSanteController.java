@@ -1,6 +1,7 @@
 package com.nuitriapp.equilibro.controller;
 
 import com.nuitriapp.equilibro.config.JwtUtil;
+import com.nuitriapp.equilibro.model.PlanRepas;
 import com.nuitriapp.equilibro.model.ProfilDeSante;
 import com.nuitriapp.equilibro.service.ProfilDeSanteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -89,6 +91,14 @@ public class ProfilDeSanteController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @GetMapping("/plan-repas/{profilId}")
+    public ResponseEntity<PlanRepas> obtenirPlanRepas(@PathVariable Long profilId) {
+        PlanRepas planRepas = profilDeSanteService.genererPlanRepas(profilId);
+        return ResponseEntity.ok(planRepas);
+    }
+
 
 
 }

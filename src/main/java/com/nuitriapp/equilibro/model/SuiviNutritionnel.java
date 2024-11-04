@@ -8,15 +8,19 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-@Entity
 @Data
-public class Video {
+@Entity
+public class SuiviNutritionnel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String titre;
-    private String url;
-    private LocalDate datePublication;
+    private Long profilId;
+    private LocalDate date;
+    private int calories;
+    private int glucides;
+    private int lipides;
+    private int proteines;
+    private int sodium;
 
 }

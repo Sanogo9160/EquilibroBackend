@@ -1,5 +1,6 @@
 package com.nuitriapp.equilibro.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Commentaire {
     @JoinColumn(name = "utilisateur_id")
     private Utilisateur auteur;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dateCreation;
 
     @ManyToOne
