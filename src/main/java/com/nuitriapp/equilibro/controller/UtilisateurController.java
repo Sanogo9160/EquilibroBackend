@@ -51,10 +51,16 @@ public class UtilisateurController {
     }
 
     @PostMapping("/ajouter/utilisateur-simple")
-    public ResponseEntity<Utilisateur> ajouterUtilisateurSimple(@RequestBody UtilisateurSimple utilisateurSimple) {
-        Utilisateur nouvelUtilisateurSimple = utilisateurService.ajouterUtilisateur(utilisateurSimple);
-        return new ResponseEntity<>(nouvelUtilisateurSimple, HttpStatus.CREATED);
+    public ResponseEntity<?> ajouterUtilisateurSimple(@RequestBody UtilisateurSimple utilisateurSimple) {
+        try {
+            Utilisateur nouvelUtilisateurSimple = utilisateurService.ajouterUtilisateur(utilisateurSimple);
+            return new ResponseEntity<>(nouvelUtilisateurSimple, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();  // Affiche l’erreur complète dans les logs
+            return new ResponseEntity<>("Erreur lors de la création de l'utilisateur : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     @PutMapping("/modifier/{id}")
     public ResponseEntity<Utilisateur> mettreAJourUtilisateur(@PathVariable Long id, @RequestBody Utilisateur utilisateur) {
